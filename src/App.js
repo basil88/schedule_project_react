@@ -8,13 +8,9 @@ class App extends Component {
         this.state = {
             items: [],
             isLoaded: false,
-            search: ""
+            search: "",
+            filter: []
         }
-    }
-
-    updateSearch(event){
-        this.setState({search: event.target.value})
-        console.log(event.target.value);
     }
 
     componentDidMount() {
@@ -28,9 +24,15 @@ class App extends Component {
             })
     }
 
+    updateSearch = (event) => {
+        this.setState({search: event.target.value});
+        let filter = this.state.items.filter(item => item.courseName.includes(this.state.search));
+        this.setState({filter : filter})
+    };
+
     render() {
 
-        let {isLoaded, items} = this.state;
+        let {isLoaded, filter} = this.state;
 
         if (!isLoaded) {
             return (
@@ -42,22 +44,20 @@ class App extends Component {
         else {
             return (
                 <div className="App">
+                    <input type="text"
+                           value={this.state.search}
+                           onChange={this.updateSearch}
+                    />
                     <ul>
-                        {items.map(item => (
-                            <li key={item.courseNum}>
+                        {filter.map(item => (
+                            <li key={item.courseNum} onClick={console.log('clicked!')}>
                                 {item.courseName}, {item.courseCredit}
                             </li>
                         ))}
                     </ul>
-                    <input type="text"
-                           value={this.state.search}
-                           onChange={this.updateSearch.bind(this)}
-                    />
-
                 </div>
             )
         }
-        ;
     }
 }
 
